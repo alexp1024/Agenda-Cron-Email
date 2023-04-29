@@ -3,7 +3,6 @@ import { config } from ".";
 
 const options: ConnectOptions = {
     autoCreate: true,
-    useNewUrlParser: true,
 };
 
 export function SetupDatabase() {
