@@ -4,8 +4,28 @@ import { agenda, StartAgendaJobs } from "./jobs";
 import { definitions } from "./jobs/definitions";
 const Agendash = require("agendash");
 import "dotenv/config";
+import cors from "cors";
 
 const app = express();
+
+const allowlist = new Set([
+   config.API_URL
+]);
+
+const corsOptionsDelegate = function (request: Request, callback: any) {
+    let corsOptions = { origin: true };
+    if (process.env.NODE_ENV !== "production") {
+        callback(null, corsOptions);
+    } else {
+        const origin = request.header("Origin");
+        if (origin && allowlist.has(origin)) {
+            corsOptions = { origin: true };
+        }
+        callback(null, corsOptions);
+    }
+};
+
+app.use(cors(corsOptionsDelegate));
 
 SetupDatabase()?.then(() => {
     app.listen({ port: config.PORT }, async () => {
